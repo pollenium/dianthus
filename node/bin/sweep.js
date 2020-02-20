@@ -55,12 +55,11 @@ var dai_1 = require("../utils/dai");
 var daishReader_1 = require("../utils/daishReader");
 var daishWriter_1 = require("../utils/daishWriter");
 var engineWriter_1 = require("../utils/engineWriter");
-var provider_1 = require("../utils/provider");
 var MIN_DEPOSIT = 1;
 var nullAddress = pollenium_buttercup_1.Address.genNull();
 console.log('=== S W E E P ===');
 daiTransferSnowdrop_1.daiTransferSnowdrop.addHandle(function (daiTransfer) { return __awaiter(void 0, void 0, void 0, function () {
-    var dst, permitRequest, balance, allowance, nonce, transactionHash;
+    var dst, permitRequest, balance, allowance, nonce;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -91,28 +90,25 @@ daiTransferSnowdrop_1.daiTransferSnowdrop.addHandle(function (daiTransfer) { ret
             case 3:
                 allowance = _a.sent();
                 console.log('allowance', allowance.toNumberString(10));
-                if (!allowance.compLt(balance)) return [3 /*break*/, 7];
+                if (!allowance.compLt(balance)) return [3 /*break*/, 6];
                 console.log('balance lt allowance');
                 return [4 /*yield*/, daishReader_1.daishReader.fetchNonce(dst)];
             case 4:
                 nonce = _a.sent();
                 console.log('nonce', nonce.toNumberString(10));
-                if (!nonce.uu.getIsEqual(permitRequest.nonce)) return [3 /*break*/, 7];
+                if (!nonce.uu.getIsEqual(permitRequest.nonce)) return [3 /*break*/, 6];
                 console.log('permit');
                 return [4 /*yield*/, daishWriter_1.daishWriter.permit(__assign(__assign({}, permitRequest), { spender: engine_1.engine }))];
             case 5:
-                transactionHash = (_a.sent()).transactionHash;
-                return [4 /*yield*/, provider_1.provider.waitForTransaction(transactionHash.uu.toHex())];
-            case 6:
                 _a.sent();
-                _a.label = 7;
-            case 7:
+                _a.label = 6;
+            case 6:
                 console.log('deposit via sweep');
                 return [4 /*yield*/, engineWriter_1.engineWriter.depositViaSweep({
                         toAndFrom: dst,
                         token: dai_1.dai
                     })];
-            case 8:
+            case 7:
                 _a.sent();
                 return [2 /*return*/];
         }

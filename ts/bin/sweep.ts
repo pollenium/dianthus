@@ -50,11 +50,10 @@ daiTransferSnowdrop.addHandle(async (daiTransfer) => {
     console.log('nonce', nonce.toNumberString(10))
     if (nonce.uu.getIsEqual(permitRequest.nonce)) {
       console.log('permit')
-      const { transactionHash } = await daishWriter.permit({
+      await daishWriter.permit({
         ...permitRequest,
         spender: engine
       })
-      await provider.waitForTransaction(transactionHash.uu.toHex())
     }
   }
 
