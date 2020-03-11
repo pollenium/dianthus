@@ -18,6 +18,9 @@ export class Client {
 
     return fetch(this.serverUrl, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
       body: Uu.genConcat([
         new Uint8Array([RequestType.PERMIT]),
         requestEncoding
@@ -33,6 +36,9 @@ export class Client {
 
     return fetch(this.serverUrl, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
       body: Uu.genConcat([
         new Uint8Array([RequestType.DEPOSIT_SWEEP]),
         requestEncoding

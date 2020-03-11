@@ -17,6 +17,9 @@ var Client = /** @class */ (function () {
         var requestEncoding = request.getEncoding();
         return node_fetch_1["default"](this.serverUrl, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/octet-stream'
+            },
             body: pollenium_uvaursi_1.Uu.genConcat([
                 new Uint8Array([RequestType_1.RequestType.PERMIT]),
                 requestEncoding
@@ -28,6 +31,9 @@ var Client = /** @class */ (function () {
         var requestEncoding = request.getEncoding();
         return node_fetch_1["default"](this.serverUrl, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/octet-stream'
+            },
             body: pollenium_uvaursi_1.Uu.genConcat([
                 new Uint8Array([RequestType_1.RequestType.DEPOSIT_SWEEP]),
                 requestEncoding
