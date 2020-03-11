@@ -44,7 +44,7 @@ function createServer(port) {
     var _this = this;
     http_1.createServer(function (request, response) {
         request.on('data', function (encoding) { return __awaiter(_this, void 0, void 0, function () {
-            var requestType, nextEncoding, _a, err_1;
+            var requestType, nextEncoding, _a, error_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -82,8 +82,9 @@ function createServer(port) {
                         response.end();
                         return [3 /*break*/, 9];
                     case 8:
-                        err_1 = _b.sent();
-                        response.write(err_1);
+                        error_1 = _b.sent();
+                        console.log(error_1);
+                        response.write(error_1.message);
                         response.writeHead(500);
                         response.end();
                         return [3 /*break*/, 9];
