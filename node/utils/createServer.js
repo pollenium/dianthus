@@ -48,35 +48,46 @@ function createServer(port) {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        _b.trys.push([0, 7, , 8]);
+                        response.setHeader('Access-Control-Allow-Origin', '*');
+                        response.setHeader('Access-Control-Request-Method', '*');
+                        response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+                        response.setHeader('Access-Control-Allow-Headers', '*');
+                        if (request.method === 'OPTIONS') {
+                            response.writeHead(200);
+                            response.end();
+                            return [2 /*return*/];
+                        }
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 8, , 9]);
                         requestType = encoding[0];
                         nextEncoding = encoding.slice(1);
                         _a = requestType;
                         switch (_a) {
-                            case RequestType_1.RequestType.PERMIT: return [3 /*break*/, 1];
-                            case RequestType_1.RequestType.DEPOSIT_SWEEP: return [3 /*break*/, 3];
+                            case RequestType_1.RequestType.PERMIT: return [3 /*break*/, 2];
+                            case RequestType_1.RequestType.DEPOSIT_SWEEP: return [3 /*break*/, 4];
                         }
-                        return [3 /*break*/, 5];
-                    case 1: return [4 /*yield*/, handlePermitEncoding_1.handlePermitEncoding(nextEncoding)];
-                    case 2:
-                        _b.sent();
                         return [3 /*break*/, 6];
-                    case 3: return [4 /*yield*/, handleDepositSweepEncoding_1.handleDepositSweepEncoding(nextEncoding)];
-                    case 4:
+                    case 2: return [4 /*yield*/, handlePermitEncoding_1.handlePermitEncoding(nextEncoding)];
+                    case 3:
                         _b.sent();
-                        return [3 /*break*/, 6];
-                    case 5: throw new Error("Unknown request type: " + requestType);
-                    case 6:
+                        return [3 /*break*/, 7];
+                    case 4: return [4 /*yield*/, handleDepositSweepEncoding_1.handleDepositSweepEncoding(nextEncoding)];
+                    case 5:
+                        _b.sent();
+                        return [3 /*break*/, 7];
+                    case 6: throw new Error("Unknown request type: " + requestType);
+                    case 7:
                         response.writeHead(200);
                         response.end();
-                        return [3 /*break*/, 8];
-                    case 7:
+                        return [3 /*break*/, 9];
+                    case 8:
                         err_1 = _b.sent();
                         console.log(err_1);
                         response.writeHead(500);
                         response.end();
-                        return [3 /*break*/, 8];
-                    case 8: return [2 /*return*/];
+                        return [3 /*break*/, 9];
+                    case 9: return [2 /*return*/];
                 }
             });
         }); });

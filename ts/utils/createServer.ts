@@ -6,6 +6,18 @@ import { handleDepositSweepEncoding } from './server/handleDepositSweepEncoding'
 export function createServer(port: number) {
   createHttpServer((request, response) => {
     request.on('data', async (encoding) => {
+
+      response.setHeader('Access-Control-Allow-Origin', '*');
+    	response.setHeader('Access-Control-Request-Method', '*');
+    	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+    	response.setHeader('Access-Control-Allow-Headers', '*');
+    	if (request.method === 'OPTIONS') {
+    		response.writeHead(200);
+    		response.end();
+    		return;
+    	}
+
+
       try {
         const requestType = encoding[0]
         const nextEncoding = encoding.slice(1)
