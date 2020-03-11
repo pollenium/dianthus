@@ -50,7 +50,7 @@ var Client = /** @class */ (function () {
     }
     Client.prototype.post = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, message;
+            var response, body, message;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, node_fetch_1["default"](this.serverUrl, {
@@ -63,8 +63,9 @@ var Client = /** @class */ (function () {
                     case 1:
                         response = _a.sent();
                         if (response.status !== 200) {
-                            if (response.body) {
-                                message = new pollenium_uvaursi_1.Uu(response.body.read()).toUtf8();
+                            body = response.body ? response.body.read() : null;
+                            if (body) {
+                                message = new pollenium_uvaursi_1.Uu(body).toUtf8();
                                 throw new Error(message);
                             }
                             throw new Error("HTTP Error: " + response.status);

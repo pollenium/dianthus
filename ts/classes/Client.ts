@@ -17,8 +17,9 @@ export class Client {
       body: Uu.wrap(data).u.buffer
     })
     if (response.status !== 200) {
-      if (response.body) {
-        const message = new Uu(response.body.read()).toUtf8()
+      const body = response.body ? response.body.read() : null
+      if (body) {
+        const message = new Uu(body).toUtf8()
         throw new Error(message)
       }
       throw new Error(`HTTP Error: ${response.status}`)
