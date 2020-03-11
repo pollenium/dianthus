@@ -18,11 +18,9 @@ var pollenium_dianella_1 = require("pollenium-dianella");
 var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 var PermitRequest = /** @class */ (function () {
     function PermitRequest(struct) {
-        console.log('construct');
         this.holder = new pollenium_buttercup_1.Address(struct.holder);
         this.nonce = new pollenium_buttercup_1.Uint256(struct.nonce);
         this.signature = new pollenium_ilex_1.Signature(struct.signature);
-        console.log('v', this.signature.v.toNumber());
     }
     PermitRequest.prototype.getEncoding = function () {
         if (this.encoding) {

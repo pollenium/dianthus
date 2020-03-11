@@ -35,42 +35,36 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 exports.__esModule = true;
-var PermitRequest_1 = require("../classes/PermitRequest");
-var node_fetch_1 = __importDefault(require("node-fetch"));
-var createServer_1 = require("../utils/createServer");
-var daishReader_1 = require("../utils/daishReader");
 var pollenium_xeranthemum_1 = require("pollenium-xeranthemum");
-var port = 4920;
-createServer_1.createServer(port);
+var daishReader_1 = require("../utils/daishReader");
+var engineReader_1 = require("../utils/engineReader");
+var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var dianthusTesterKeypair, nonce, request, requestEncoding, response;
+        var daiBalance, daiAllowance, engineDaiBalance;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, pollenium_xeranthemum_1.utils.promptComputeKeypair()];
+                case 0:
+                    console.log('dianthusTester', pollenium_xeranthemum_1.users.dianthusTester.toHex());
+                    return [4 /*yield*/, daishReader_1.daishReader.fetchBalance(pollenium_xeranthemum_1.users.dianthusTester)];
                 case 1:
-                    dianthusTesterKeypair = _a.sent();
-                    if (!dianthusTesterKeypair.getAddress().uu.getIsEqual(pollenium_xeranthemum_1.users.dianthusTester)) {
-                        throw new Error('Not dianthusTester');
-                    }
-                    return [4 /*yield*/, daishReader_1.daishReader.fetchNonce(pollenium_xeranthemum_1.users.dianthusTester)];
+                    daiBalance = _a.sent();
+                    console.log('dai balance', daiBalance.toNumberString(10));
+                    return [4 /*yield*/, daishReader_1.daishReader.fetchAllowance({
+                            holder: pollenium_xeranthemum_1.users.dianthusTester,
+                            spender: pollenium_xanthoceras_1.engine
+                        })];
                 case 2:
-                    nonce = _a.sent();
-                    console.log('nonce', nonce.toNumber());
-                    request = PermitRequest_1.PermitRequest.gen({
-                        holderPrivateKey: dianthusTesterKeypair.privateKey,
-                        nonce: nonce
-                    });
-                    requestEncoding = request.getEncoding();
-                    response = node_fetch_1["default"]("http://localhost:" + port, {
-                        method: 'POST',
-                        body: requestEncoding.u
-                    });
-                    console.log(response);
+                    daiAllowance = _a.sent();
+                    console.log('dai allowance', daiAllowance.toNumberString(10));
+                    return [4 /*yield*/, engineReader_1.engineReader.fetchBalance({
+                            holder: pollenium_xeranthemum_1.users.dianthusTester,
+                            token: pollenium_xanthoceras_1.dai
+                        })];
+                case 3:
+                    engineDaiBalance = _a.sent();
+                    console.log('engine dai balance', engineDaiBalance.toNumberString(10));
                     return [2 /*return*/];
             }
         });

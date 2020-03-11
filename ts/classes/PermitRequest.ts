@@ -4,14 +4,6 @@ import { Address, Uintable, Uint256 } from 'pollenium-buttercup'
 import { genPermitHash, genPermitStruct } from 'pollenium-dianella'
 import { engine } from 'pollenium-xanthoceras'
 
-export interface PermitRequestResult {
-  id: number,
-  createdAt: number,
-  holder: Uint8Array,
-  nonce: Uint8Array,
-  signature: Uint8Array,
-}
-
 export interface PermitRequestStruct {
   id?: number,
   createdAt?: number,
@@ -29,11 +21,9 @@ export class PermitRequest {
   private encoding: Uu
 
   constructor(struct: PermitRequestStruct) {
-    console.log('construct')
     this.holder = new Address(struct.holder)
     this.nonce = new Uint256(struct.nonce)
     this.signature = new Signature(struct.signature)
-    console.log('v', this.signature.v.toNumber())
   }
 
   getEncoding(): Uu {

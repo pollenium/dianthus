@@ -1,7 +1,7 @@
 import { users } from 'pollenium-xeranthemum'
 import { daishReader } from '../utils/daishReader'
 import { engineReader } from '../utils/engineReader'
-import { dai } from 'pollenium-xanthoceras'
+import { dai, engine } from 'pollenium-xanthoceras'
 
 async function run() {
 
@@ -9,6 +9,12 @@ async function run() {
 
   const daiBalance = await daishReader.fetchBalance(users.dianthusTester)
   console.log('dai balance', daiBalance.toNumberString(10))
+
+  const daiAllowance = await daishReader.fetchAllowance({
+    holder: users.dianthusTester,
+    spender: engine
+  })
+  console.log('dai allowance', daiAllowance.toNumberString(10))
 
   const engineDaiBalance = await engineReader.fetchBalance({
     holder: users.dianthusTester,

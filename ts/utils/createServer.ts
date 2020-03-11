@@ -1,55 +1,25 @@
 import { createServer as createHttpServer } from 'http'
-import { PermitRequest } from '../classes/PermitRequest'
-import { Address } from 'pollenium-buttercup'
-import { daishReader } from './daishReader'
-import { daishWriter } from './daishWriter'
-import { engine } from 'pollenium-xanthoceras'
-
-const lastPermittedAtByHolderHex:{ [holderHex: string]: number } = {}
-const permitCooldown = 5 * 60 * 1000
+import { RequestType } from '../RequestType'
+import { handlePermitEncoding } from './server/handlePermitEncoding'
+import { handleDepositSweepEncoding } from './server/handleDepositSweepEncoding'
 
 export function createServer(port: number) {
   createHttpServer((request, response) => {
     request.on('data', async (encoding) => {
       try {
-        const permitRequest = PermitRequest.fromEncoding(encoding)
-
-        if (!permitRequest.getIsSignatureValid()) {
-          throw new Error('Invalid signature')
+        const requestType = encoding[0]
+        const nextEncoding = encoding.slice(1)
+        switch (requestType) {
+          case RequestType.PERMIT:
+            await handlePermitEncoding(nextEncoding)
+            break;
+          case RequestType.DEPOSIT_SWEEP:
+            await handleDepositSweepEncoding(nextEncoding)
+            break;
+          default:
+            throw new Error(`Unknown request type: ${requestType}`)
+            break;
         }
-
-        const balance = await daishReader.fetchBalance(permitRequest.holder)
-
-        if (balance.compEq(0)) {
-          throw new Error('Dai balance is 0')
-        }
-
-        const allowance = await daishReader.fetchAllowance({
-          holder: permitRequest.holder,
-          spender: engine
-        })
-
-        if (allowance.compGt(0)) {
-          throw new Error('Already permitted')
-        }
-
-        const holderHex = permitRequest.holder.uu.toHex()
-        const lastPermittedAt = lastPermittedAtByHolderHex[permitRequest.holder.uu.toHex()]
-
-        if (lastPermittedAtByHolderHex[holderHex] !== null) {
-          const ellapsed = new Date().getTime() - lastPermittedAt
-          if (ellapsed < permitCooldown) {
-            throw new Error(`Permitted ${ellapsed} ago`)
-          }
-        }
-
-        await daishWriter.permit({
-          ...permitRequest,
-          spender: engine
-        })
-
-        lastPermittedAt[holderHex] = new Date().getTime()
-
         response.writeHead(200)
         response.end()
       } catch(err) {
