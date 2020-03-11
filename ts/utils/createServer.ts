@@ -35,7 +35,7 @@ export function createServer(port: number) {
         response.writeHead(200)
         response.end()
       } catch(err) {
-        console.log(err)
+        response.write(err)
         response.writeHead(500)
         response.end()
       }

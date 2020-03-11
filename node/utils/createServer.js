@@ -83,7 +83,7 @@ function createServer(port) {
                         return [3 /*break*/, 9];
                     case 8:
                         err_1 = _b.sent();
-                        console.log(err_1);
+                        response.write(err_1);
                         response.writeHead(500);
                         response.end();
                         return [3 /*break*/, 9];
