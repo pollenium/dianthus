@@ -8,42 +8,52 @@ export class Client {
 
   constructor(readonly serverUrl: string) {}
 
+  private async post(data: Uish): Promise<void> {
+    const response = await fetch(this.serverUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/octet-stream'
+      },
+      body: Uu.wrap(data).u.buffer
+    })
+    if (response.status !== 200) {
+      if (response.body) {
+        const message = new Uu(response.body.read()).toUtf8()
+        throw new Error(message)
+      }
+      throw new Error(`HTTP Error: ${response.status}`)
+    }
+
+  }
+
   genAndUploadPermitRequest(struct: {
     holderPrivateKey: Uish,
     nonce: Uish
-  }) {
+  }): Promise<void> {
 
     const request = PermitRequest.gen(struct)
     const requestEncoding = request.getEncoding()
 
-    return fetch(this.serverUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      },
-      body: Uu.genConcat([
+    return this.post(
+      Uu.genConcat([
         new Uint8Array([RequestType.PERMIT]),
         requestEncoding
-      ]).u
-    })
+      ])
+    )
 
   }
 
-  genAndUploadDepositSweepRequest(holder: Uish): Uu {
+  genAndUploadDepositSweepRequest(holder: Uish): Promise<void> {
 
     const request = new DepositSweepRequest(holder)
     const requestEncoding = request.getEncoding()
 
-    return fetch(this.serverUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      },
-      body: Uu.genConcat([
+    return this.post(
+      Uu.genConcat([
         new Uint8Array([RequestType.DEPOSIT_SWEEP]),
         requestEncoding
-      ]).u
-    })
+      ])
+    )
 
   }
 

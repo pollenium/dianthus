@@ -1,10 +1,11 @@
-import { Uish, Uu } from 'pollenium-uvaursi';
+import { Uish } from 'pollenium-uvaursi';
 export declare class Client {
     readonly serverUrl: string;
     constructor(serverUrl: string);
+    private post;
     genAndUploadPermitRequest(struct: {
         holderPrivateKey: Uish;
         nonce: Uish;
-    }): any;
-    genAndUploadDepositSweepRequest(holder: Uish): Uu;
+    }): Promise<void>;
+    genAndUploadDepositSweepRequest(holder: Uish): Promise<void>;
 }

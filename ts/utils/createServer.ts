@@ -4,20 +4,22 @@ import { handlePermitEncoding } from './server/handlePermitEncoding'
 import { handleDepositSweepEncoding } from './server/handleDepositSweepEncoding'
 
 export function createServer(port: number) {
-  createHttpServer((request, response) => {
+  createHttpServer(async (request, response) => {
+
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Request-Method', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
+    response.setHeader('Access-Control-Allow-Headers', '*');
+    response.setHeader('Content-Type', 'text/html; charset=utf-8');
+
+    if (request.method === 'OPTIONS') {
+      await response.writeHead(200);
+      response.end();
+      return;
+    }
+
+
     request.on('data', async (encoding) => {
-
-      response.setHeader('Access-Control-Allow-Origin', '*');
-    	response.setHeader('Access-Control-Request-Method', '*');
-    	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
-    	response.setHeader('Access-Control-Allow-Headers', '*');
-  
-    	if (request.method === 'OPTIONS') {
-    		response.writeHead(200);
-    		response.end();
-    		return;
-    	}
-
 
       try {
         const requestType = encoding[0]
@@ -37,8 +39,8 @@ export function createServer(port: number) {
         response.end()
       } catch(error) {
         console.log(error)
-        response.write(error.message)
-        response.writeHead(500)
+        await response.writeHead(500)
+        await response.write(error.message)
         response.end()
       }
     })
