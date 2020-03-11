@@ -2,7 +2,7 @@ import { Uish, Uu } from 'pollenium-uvaursi'
 import { SignatureStruct, Signature } from 'pollenium-ilex'
 import { Address, Uintable, Uint256 } from 'pollenium-buttercup'
 import { genPermitHash, genPermitStruct } from 'pollenium-dianella'
-import { engine } from '../utils/engine'
+import { engine } from 'pollenium-xanthoceras'
 
 export interface PermitRequestResult {
   id: number,

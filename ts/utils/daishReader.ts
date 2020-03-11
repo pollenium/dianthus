@@ -1,6 +1,6 @@
 import { DaishReader } from 'pollenium-dianella'
 import { provider } from './provider'
-import { dai } from './dai'
+import { dai } from 'pollenium-xanthoceras'
 
 export const daishReader = new DaishReader({
   address: dai,
