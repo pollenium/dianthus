@@ -29,9 +29,11 @@ export class PermitRequest {
   private encoding: Uu
 
   constructor(struct: PermitRequestStruct) {
+    console.log('construct')
     this.holder = new Address(struct.holder)
     this.nonce = new Uint256(struct.nonce)
     this.signature = new Signature(struct.signature)
+    console.log('v', this.signature.v.toNumber())
   }
 
   getEncoding(): Uu {
@@ -71,8 +73,8 @@ export class PermitRequest {
     const encoding = Uu.wrap(encodingUish)
     return new PermitRequest({
       holder: encoding.u.slice(0, 20),
-      nonce: encoding.u.slice(40, 72),
-      signature: Signature.fromEncoding(encoding.u.slice(72, 137))
+      nonce: encoding.u.slice(20, 52),
+      signature: Signature.fromEncoding(encoding.u.slice(52, 117))
     })
   }
 

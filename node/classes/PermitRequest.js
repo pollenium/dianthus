@@ -18,9 +18,11 @@ var pollenium_dianella_1 = require("pollenium-dianella");
 var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 var PermitRequest = /** @class */ (function () {
     function PermitRequest(struct) {
+        console.log('construct');
         this.holder = new pollenium_buttercup_1.Address(struct.holder);
         this.nonce = new pollenium_buttercup_1.Uint256(struct.nonce);
         this.signature = new pollenium_ilex_1.Signature(struct.signature);
+        console.log('v', this.signature.v.toNumber());
     }
     PermitRequest.prototype.getEncoding = function () {
         if (this.encoding) {
@@ -50,8 +52,8 @@ var PermitRequest = /** @class */ (function () {
         var encoding = pollenium_uvaursi_1.Uu.wrap(encodingUish);
         return new PermitRequest({
             holder: encoding.u.slice(0, 20),
-            nonce: encoding.u.slice(40, 72),
-            signature: pollenium_ilex_1.Signature.fromEncoding(encoding.u.slice(72, 137))
+            nonce: encoding.u.slice(20, 52),
+            signature: pollenium_ilex_1.Signature.fromEncoding(encoding.u.slice(52, 117))
         });
     };
     return PermitRequest;
