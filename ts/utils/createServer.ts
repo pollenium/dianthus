@@ -11,6 +11,7 @@ export function createServer(port: number) {
     	response.setHeader('Access-Control-Request-Method', '*');
     	response.setHeader('Access-Control-Allow-Methods', 'OPTIONS, POST');
     	response.setHeader('Access-Control-Allow-Headers', '*');
+      response.setHeader('Content-Type', 'application/octet-stream')
     	if (request.method === 'OPTIONS') {
     		response.writeHead(200);
     		response.end();
