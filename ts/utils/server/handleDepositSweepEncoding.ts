@@ -6,7 +6,7 @@ import { engine, dai } from 'pollenium-xanthoceras'
 import { engineWriter } from '../engineWriter'
 
 const lastDepositSweepAtByHolderHex:{ [holderHex: string]: number } = {}
-const permitCooldown = 5 * 60 * 1000
+const cooldown = 1 * 60 * 1000
 
 export async function handleDepositSweepEncoding(encoding) {
   const depositSweepRequest = DepositSweepRequest.fromEncoding(encoding)
@@ -31,7 +31,7 @@ export async function handleDepositSweepEncoding(encoding) {
 
   if (lastDepositSweepAtByHolderHex[holderHex] !== null) {
     const ellapsed = new Date().getTime() - lastDepositSweepAt
-    if (ellapsed < permitCooldown) {
+    if (ellapsed < cooldown) {
       throw new Error(`Deposit sweeped ${ellapsed} ago`)
     }
   }

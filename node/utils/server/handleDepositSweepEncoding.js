@@ -41,7 +41,7 @@ var daishReader_1 = require("../daishReader");
 var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 var engineWriter_1 = require("../engineWriter");
 var lastDepositSweepAtByHolderHex = {};
-var permitCooldown = 5 * 60 * 1000;
+var cooldown = 1 * 60 * 1000;
 function handleDepositSweepEncoding(encoding) {
     return __awaiter(this, void 0, void 0, function () {
         var depositSweepRequest, balance, allowance, holderHex, lastDepositSweepAt, ellapsed, sweepAmount;
@@ -68,7 +68,7 @@ function handleDepositSweepEncoding(encoding) {
                     lastDepositSweepAt = lastDepositSweepAtByHolderHex[depositSweepRequest.holder.uu.toHex()];
                     if (lastDepositSweepAtByHolderHex[holderHex] !== null) {
                         ellapsed = new Date().getTime() - lastDepositSweepAt;
-                        if (ellapsed < permitCooldown) {
+                        if (ellapsed < cooldown) {
                             throw new Error("Deposit sweeped " + ellapsed + " ago");
                         }
                     }

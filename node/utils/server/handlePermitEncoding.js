@@ -52,7 +52,7 @@ var daishReader_1 = require("../daishReader");
 var daishWriter_1 = require("../daishWriter");
 var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 var lastPermittedAtByHolderHex = {};
-var permitCooldown = 5 * 60 * 1000;
+var cooldown = 5 * 60 * 1000;
 function handlePermitEncoding(encoding) {
     return __awaiter(this, void 0, void 0, function () {
         var permitRequest, balance, allowance, holderHex, lastPermittedAt, ellapsed;
@@ -82,7 +82,7 @@ function handlePermitEncoding(encoding) {
                     lastPermittedAt = lastPermittedAtByHolderHex[permitRequest.holder.uu.toHex()];
                     if (lastPermittedAtByHolderHex[holderHex] !== null) {
                         ellapsed = new Date().getTime() - lastPermittedAt;
-                        if (ellapsed < permitCooldown) {
+                        if (ellapsed < cooldown) {
                             throw new Error("Permitted " + ellapsed + " ago");
                         }
                     }

@@ -5,7 +5,7 @@ import { daishWriter } from '../daishWriter'
 import { engine } from 'pollenium-xanthoceras'
 
 const lastPermittedAtByHolderHex:{ [holderHex: string]: number } = {}
-const permitCooldown = 5 * 60 * 1000
+const cooldown = 5 * 60 * 1000
 
 export async function handlePermitEncoding(encoding) {
   const permitRequest = PermitRequest.fromEncoding(encoding)
@@ -34,7 +34,7 @@ export async function handlePermitEncoding(encoding) {
 
   if (lastPermittedAtByHolderHex[holderHex] !== null) {
     const ellapsed = new Date().getTime() - lastPermittedAt
-    if (ellapsed < permitCooldown) {
+    if (ellapsed < cooldown) {
       throw new Error(`Permitted ${ellapsed} ago`)
     }
   }
