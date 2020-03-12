@@ -2,6 +2,7 @@ import { createServer as createHttpServer } from 'http'
 import { RequestType } from '../RequestType'
 import { handlePermitEncoding } from './server/handlePermitEncoding'
 import { handleDepositSweepEncoding } from './server/handleDepositSweepEncoding'
+import { Uu } from 'pollenium-uvaursi'
 
 export function createServer(port: number) {
   createHttpServer(async (request, response) => {
@@ -19,9 +20,11 @@ export function createServer(port: number) {
     }
 
 
-    request.on('data', async (encoding) => {
+    request.on('data', async (encodingHexU) => {
 
       try {
+        const encodingHex = new Uu(encodingHexU).toUtf8()
+        const encoding = Uu.fromHexish(encodingHex).u
         const requestType = encoding[0]
         const nextEncoding = encoding.slice(1)
         switch (requestType) {

@@ -11,10 +11,7 @@ export class Client {
   private async post(data: Uish): Promise<void> {
     const response = await fetch(this.serverUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/octet-stream'
-      },
-      body: Uu.wrap(data).u.buffer
+      body: Uu.wrap(data).toHex()
     })
     if (response.status !== 200) {
       const body = response.body ? response.body.read() : null

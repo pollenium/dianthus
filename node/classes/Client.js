@@ -55,10 +55,7 @@ var Client = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, node_fetch_1["default"](this.serverUrl, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/octet-stream'
-                            },
-                            body: pollenium_uvaursi_1.Uu.wrap(data).u.buffer
+                            body: pollenium_uvaursi_1.Uu.wrap(data).toHex()
                         })];
                     case 1:
                         response = _a.sent();

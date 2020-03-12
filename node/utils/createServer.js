@@ -40,6 +40,7 @@ var http_1 = require("http");
 var RequestType_1 = require("../RequestType");
 var handlePermitEncoding_1 = require("./server/handlePermitEncoding");
 var handleDepositSweepEncoding_1 = require("./server/handleDepositSweepEncoding");
+var pollenium_uvaursi_1 = require("pollenium-uvaursi");
 function createServer(port) {
     var _this = this;
     http_1.createServer(function (request, response) { return __awaiter(_this, void 0, void 0, function () {
@@ -59,12 +60,14 @@ function createServer(port) {
                     response.end();
                     return [2 /*return*/];
                 case 2:
-                    request.on('data', function (encoding) { return __awaiter(_this, void 0, void 0, function () {
-                        var requestType, nextEncoding, _a, error_1;
+                    request.on('data', function (encodingHexU) { return __awaiter(_this, void 0, void 0, function () {
+                        var encodingHex, encoding, requestType, nextEncoding, _a, error_1;
                         return __generator(this, function (_b) {
                             switch (_b.label) {
                                 case 0:
                                     _b.trys.push([0, 7, , 10]);
+                                    encodingHex = new pollenium_uvaursi_1.Uu(encodingHexU).toUtf8();
+                                    encoding = pollenium_uvaursi_1.Uu.fromHexish(encodingHex).u;
                                     requestType = encoding[0];
                                     nextEncoding = encoding.slice(1);
                                     _a = requestType;

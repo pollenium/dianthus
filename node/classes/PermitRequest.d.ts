@@ -2,8 +2,6 @@ import { Uish, Uu } from 'pollenium-uvaursi';
 import { SignatureStruct, Signature } from 'pollenium-ilex';
 import { Address, Uintable, Uint256 } from 'pollenium-buttercup';
 export interface PermitRequestStruct {
-    id?: number;
-    createdAt?: number;
     holder: Uish;
     nonce: Uintable;
     signature: SignatureStruct;

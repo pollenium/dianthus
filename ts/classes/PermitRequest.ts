@@ -5,8 +5,6 @@ import { genPermitHash, genPermitStruct } from 'pollenium-dianella'
 import { engine } from 'pollenium-xanthoceras'
 
 export interface PermitRequestStruct {
-  id?: number,
-  createdAt?: number,
   holder: Uish,
   nonce: Uintable,
   signature: SignatureStruct
