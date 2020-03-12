@@ -68,4 +68,6 @@ function run() {
         });
     });
 }
-run();
+run()["catch"](function (error) {
+    console.log('ERROR', error.message);
+});

@@ -17,4 +17,6 @@ async function run() {
   await client.genAndUploadDepositSweepRequest(users.dianthusTester)
 }
 
-run()
+run().catch((error) => {
+  console.log('ERROR', error.message)
+})
