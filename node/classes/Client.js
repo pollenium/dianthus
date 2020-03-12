@@ -50,7 +50,7 @@ var Client = /** @class */ (function () {
     }
     Client.prototype.post = function (data) {
         return __awaiter(this, void 0, void 0, function () {
-            var response, body, message;
+            var response;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, node_fetch_1["default"](this.serverUrl, {
@@ -59,15 +59,23 @@ var Client = /** @class */ (function () {
                         })];
                     case 1:
                         response = _a.sent();
-                        if (response.status !== 200) {
-                            body = response.body ? response.body.read() : null;
-                            if (body) {
-                                message = new pollenium_uvaursi_1.Uu(body).toUtf8();
-                                throw new Error(message);
-                            }
-                            throw new Error("HTTP Error: " + response.status);
-                        }
-                        return [2 /*return*/];
+                        if (!(response.status !== 200)) return [3 /*break*/, 3];
+                        return [4 /*yield*/, new Promise(function (resolve, reject) {
+                                response.body.on('end', function () {
+                                    var body = response.body.read();
+                                    if (body) {
+                                        var message = new pollenium_uvaursi_1.Uu(body).toUtf8();
+                                        reject(new Error(message));
+                                    }
+                                    else {
+                                        reject(new Error("HTTP Error: " + response.status));
+                                    }
+                                });
+                            })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });
