@@ -1,2 +1,6 @@
 import { ethers } from 'ethers';
-export declare const provider: ethers.providers.InfuraProvider;
+declare class FastProvider extends ethers.providers.InfuraProvider {
+    getGasPrice(): Promise<ethers.utils.BigNumber>;
+}
+export declare const provider: FastProvider;
+export {};
