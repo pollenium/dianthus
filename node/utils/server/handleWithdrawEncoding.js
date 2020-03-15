@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,55 +36,21 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var PermitRequest_1 = require("../../classes/PermitRequest");
-var daishReader_1 = require("../daishReader");
-var daishWriter_1 = require("../daishWriter");
-var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
-var lastPermittedAtByHolderHex = {};
-var cooldown = 5 * 60 * 1000;
-function handlePermitEncoding(encoding) {
+var engineWriter_1 = require("../engineWriter");
+var actionViaSignatureStructUtils_1 = require("../actionViaSignatureStructUtils");
+function handleDepositEncoding(encoding) {
     return __awaiter(this, void 0, void 0, function () {
-        var permitRequest, balance, allowance, holderHex, lastPermittedAt, ellapsed;
+        var actionViaSignatureStruct;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    permitRequest = PermitRequest_1.PermitRequest.fromEncoding(encoding);
-                    if (!permitRequest.spender.uu.getIsEqual(pollenium_xanthoceras_1.engine)) {
-                        throw new Error('Invalid spender');
-                    }
-                    if (!permitRequest.getIsSignatureValid()) {
-                        throw new Error('Invalid signature');
-                    }
-                    return [4 /*yield*/, daishReader_1.daishReader.fetchBalance(permitRequest.holder)];
+                    actionViaSignatureStruct = actionViaSignatureStructUtils_1.actionViaSignatureStructUtils.fromEncoding(encoding);
+                    return [4 /*yield*/, engineWriter_1.engineWriter.depositViaSignature(actionViaSignatureStruct)];
                 case 1:
-                    balance = _a.sent();
-                    if (balance.compEq(0)) {
-                        throw new Error('Dai balance is 0');
-                    }
-                    return [4 /*yield*/, daishReader_1.daishReader.fetchAllowance({
-                            holder: permitRequest.holder,
-                            spender: pollenium_xanthoceras_1.engine
-                        })];
-                case 2:
-                    allowance = _a.sent();
-                    if (allowance.compGt(0)) {
-                        throw new Error('Already permitted');
-                    }
-                    holderHex = permitRequest.holder.uu.toHex();
-                    lastPermittedAt = lastPermittedAtByHolderHex[permitRequest.holder.uu.toHex()];
-                    if (lastPermittedAtByHolderHex[holderHex] !== null) {
-                        ellapsed = new Date().getTime() - lastPermittedAt;
-                        if (ellapsed < cooldown) {
-                            throw new Error("Permitted " + ellapsed + " ago");
-                        }
-                    }
-                    return [4 /*yield*/, daishWriter_1.daishWriter.permit(__assign(__assign({}, permitRequest), { spender: pollenium_xanthoceras_1.engine }))];
-                case 3:
                     _a.sent();
-                    lastPermittedAtByHolderHex[holderHex] = new Date().getTime();
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.handlePermitEncoding = handlePermitEncoding;
+exports.handleDepositEncoding = handleDepositEncoding;

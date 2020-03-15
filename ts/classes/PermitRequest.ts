@@ -2,10 +2,10 @@ import { Uish, Uu } from 'pollenium-uvaursi'
 import { SignatureStruct, Signature } from 'pollenium-ilex'
 import { Address, Uintable, Uint256 } from 'pollenium-buttercup'
 import { genPermitHash, genPermitStruct } from 'pollenium-dianella'
-import { engine } from 'pollenium-xanthoceras'
 
 export interface PermitRequestStruct {
   holder: Uish,
+  spender: Uish,
   nonce: Uintable,
   signature: SignatureStruct
 }
@@ -13,6 +13,7 @@ export interface PermitRequestStruct {
 export class PermitRequest {
 
   readonly holder: Address
+  readonly spender: Address
   readonly nonce: Uint256
   readonly signature: Signature
 
@@ -20,6 +21,7 @@ export class PermitRequest {
 
   constructor(struct: PermitRequestStruct) {
     this.holder = new Address(struct.holder)
+    this.spender = new Address(struct.spender)
     this.nonce = new Uint256(struct.nonce)
     this.signature = new Signature(struct.signature)
   }
@@ -30,6 +32,7 @@ export class PermitRequest {
     }
     this.encoding = Uu.genConcat([
       this.holder,
+      this.spender,
       this.nonce,
       this.signature.getEncoding()
     ])
@@ -40,7 +43,7 @@ export class PermitRequest {
     const permitHash = genPermitHash({
       holder: this.holder,
       nonce: this.nonce,
-      spender: engine
+      spender: this.spender
     })
     const signer = this.signature.getSigner(permitHash)
     return this.holder.uu.getIsEqual(signer)
@@ -48,12 +51,10 @@ export class PermitRequest {
 
   static gen(struct: {
     holderPrivateKey: Uish,
+    spender: Uish,
     nonce: Uintable
   }): PermitRequest {
-    const permitStruct = genPermitStruct({
-      spender: engine,
-      ...struct
-    })
+    const permitStruct = genPermitStruct(struct)
     return new PermitRequest(permitStruct)
   }
 
@@ -61,8 +62,9 @@ export class PermitRequest {
     const encoding = Uu.wrap(encodingUish)
     return new PermitRequest({
       holder: encoding.u.slice(0, 20),
-      nonce: encoding.u.slice(20, 52),
-      signature: Signature.fromEncoding(encoding.u.slice(52, 117))
+      spender: encoding.u.slice(20, 40),
+      nonce: encoding.u.slice(40, 72),
+      signature: Signature.fromEncoding(encoding.u.slice(72, 137))
     })
   }
 

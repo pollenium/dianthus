@@ -39,7 +39,7 @@ exports.__esModule = true;
 var http_1 = require("http");
 var RequestType_1 = require("../RequestType");
 var handlePermitEncoding_1 = require("./server/handlePermitEncoding");
-var handleDepositSweepEncoding_1 = require("./server/handleDepositSweepEncoding");
+var handleActionEncoding_1 = require("./server/handleActionEncoding");
 var pollenium_uvaursi_1 = require("pollenium-uvaursi");
 function createServer(port) {
     var _this = this;
@@ -65,7 +65,7 @@ function createServer(port) {
                         return __generator(this, function (_b) {
                             switch (_b.label) {
                                 case 0:
-                                    _b.trys.push([0, 7, , 10]);
+                                    _b.trys.push([0, 11, , 14]);
                                     encodingHex = new pollenium_uvaursi_1.Uu(encodingHexU).toUtf8();
                                     encoding = pollenium_uvaursi_1.Uu.fromHexish(encodingHex).u;
                                     requestType = encoding[0];
@@ -73,34 +73,44 @@ function createServer(port) {
                                     _a = requestType;
                                     switch (_a) {
                                         case RequestType_1.RequestType.PERMIT: return [3 /*break*/, 1];
-                                        case RequestType_1.RequestType.DEPOSIT_SWEEP: return [3 /*break*/, 3];
+                                        case RequestType_1.RequestType.DEPOSIT: return [3 /*break*/, 3];
+                                        case RequestType_1.RequestType.WITHDRAW: return [3 /*break*/, 5];
+                                        case RequestType_1.RequestType.WITHDRAW_AND_NOTIFY: return [3 /*break*/, 7];
                                     }
-                                    return [3 /*break*/, 5];
+                                    return [3 /*break*/, 9];
                                 case 1: return [4 /*yield*/, handlePermitEncoding_1.handlePermitEncoding(nextEncoding)];
                                 case 2:
                                     _b.sent();
-                                    return [3 /*break*/, 6];
-                                case 3: return [4 /*yield*/, handleDepositSweepEncoding_1.handleDepositSweepEncoding(nextEncoding)];
+                                    return [3 /*break*/, 10];
+                                case 3: return [4 /*yield*/, handleActionEncoding_1.handleDepositEncoding(nextEncoding)];
                                 case 4:
                                     _b.sent();
-                                    return [3 /*break*/, 6];
-                                case 5: throw new Error("Unknown request type: " + requestType);
+                                    return [3 /*break*/, 10];
+                                case 5: return [4 /*yield*/, handleActionEncoding_1.handleWithdrawEncoding(nextEncoding)];
                                 case 6:
+                                    _b.sent();
+                                    return [3 /*break*/, 10];
+                                case 7: return [4 /*yield*/, handleActionEncoding_1.handleWithdrawAndNotifyEncoding(nextEncoding)];
+                                case 8:
+                                    _b.sent();
+                                    return [3 /*break*/, 10];
+                                case 9: throw new Error("Unknown request type: " + requestType);
+                                case 10:
                                     response.writeHead(200);
                                     response.end();
-                                    return [3 /*break*/, 10];
-                                case 7:
+                                    return [3 /*break*/, 14];
+                                case 11:
                                     error_1 = _b.sent();
                                     console.log(error_1);
                                     return [4 /*yield*/, response.writeHead(500)];
-                                case 8:
+                                case 12:
                                     _b.sent();
                                     return [4 /*yield*/, response.write(error_1.message)];
-                                case 9:
+                                case 13:
                                     _b.sent();
                                     response.end();
-                                    return [3 /*break*/, 10];
-                                case 10: return [2 /*return*/];
+                                    return [3 /*break*/, 14];
+                                case 14: return [2 /*return*/];
                             }
                         });
                     }); });

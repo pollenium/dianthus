@@ -1,12 +1,14 @@
 import { Uish, Uu } from 'pollenium-uvaursi'
 import { PermitRequest } from './PermitRequest'
-import { DepositSweepRequest } from './DepositSweepRequest'
 import { RequestType } from '../RequestType'
+import { Address } from 'pollenium-buttercup'
+import { genActionViaSignatureStruct, GenActionViaSignatureStructStruct } from 'pollenium-alchemilla'
+import { actionViaSignatureStructUtils } from '../utils/actionViaSignatureStructUtils'
 import fetch from 'node-fetch'
 
 export class Client {
 
-  constructor(readonly serverUrl: string) {}
+  constructor(readonly serverUrl: string) { }
 
   private async post(data: Uish): Promise<void> {
     const response = await fetch(this.serverUrl, {
@@ -26,37 +28,51 @@ export class Client {
         })
       })
     }
+  }
 
+  private postRequest(requestType: RequestType, requestEncoding: Uish): Promise<void> {
+    return this.post(Uu.genConcat([
+      new Uint8Array([requestType]),
+      requestEncoding
+    ]))
   }
 
   genAndUploadPermitRequest(struct: {
     holderPrivateKey: Uish,
+    spender: Uish,
     nonce: Uish
   }): Promise<void> {
 
     const request = PermitRequest.gen(struct)
     const requestEncoding = request.getEncoding()
 
-    return this.post(
-      Uu.genConcat([
-        new Uint8Array([RequestType.PERMIT]),
-        requestEncoding
-      ])
-    )
+    return this.postRequest(RequestType.PERMIT, requestEncoding)
+  }
+
+  genAndUploadDepositRequest(struct: GenActionViaSignatureStructStruct): Promise<void> {
+
+    const actionViaSignatureStruct = genActionViaSignatureStruct(struct)
+    const requestEncoding = actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct)
+
+    return this.postRequest(RequestType.DEPOSIT, requestEncoding)
 
   }
 
-  genAndUploadDepositSweepRequest(holder: Uish): Promise<void> {
+  genAndUploadWithdrawRequest(struct: GenActionViaSignatureStructStruct): Promise<void> {
 
-    const request = new DepositSweepRequest(holder)
-    const requestEncoding = request.getEncoding()
+    const actionViaSignatureStruct = genActionViaSignatureStruct(struct)
+    const requestEncoding = actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct)
 
-    return this.post(
-      Uu.genConcat([
-        new Uint8Array([RequestType.DEPOSIT_SWEEP]),
-        requestEncoding
-      ])
-    )
+    return this.postRequest(RequestType.WITHDRAW, requestEncoding)
+
+  }
+
+  genAndUploadWithdrawAndNotifyRequest(struct: GenActionViaSignatureStructStruct): Promise<void> {
+
+    const actionViaSignatureStruct = genActionViaSignatureStruct(struct)
+    const requestEncoding = actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct)
+
+    return this.postRequest(RequestType.WITHDRAW_AND_NOTIFY, requestEncoding)
 
   }
 

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -47,55 +36,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var PermitRequest_1 = require("../../classes/PermitRequest");
-var daishReader_1 = require("../daishReader");
-var daishWriter_1 = require("../daishWriter");
+var pollenium_uvaursi_1 = require("pollenium-uvaursi");
+var createServer_1 = require("../utils/createServer");
+var daishReader_1 = require("../utils/daishReader");
+var engineReader_1 = require("../utils/engineReader");
+var pollenium_xeranthemum_1 = require("pollenium-xeranthemum");
 var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
-var lastPermittedAtByHolderHex = {};
-var cooldown = 5 * 60 * 1000;
-function handlePermitEncoding(encoding) {
+var __1 = require("../");
+var port = 4920;
+createServer_1.createServer(port);
+function run() {
     return __awaiter(this, void 0, void 0, function () {
-        var permitRequest, balance, allowance, holderHex, lastPermittedAt, ellapsed;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    permitRequest = PermitRequest_1.PermitRequest.fromEncoding(encoding);
-                    if (!permitRequest.spender.uu.getIsEqual(pollenium_xanthoceras_1.engine)) {
-                        throw new Error('Invalid spender');
-                    }
-                    if (!permitRequest.getIsSignatureValid()) {
-                        throw new Error('Invalid signature');
-                    }
-                    return [4 /*yield*/, daishReader_1.daishReader.fetchBalance(permitRequest.holder)];
+        var dianthusTesterKeypair, client, _a, _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
+                case 0: return [4 /*yield*/, pollenium_xeranthemum_1.utils.promptComputeKeypair()];
                 case 1:
-                    balance = _a.sent();
-                    if (balance.compEq(0)) {
-                        throw new Error('Dai balance is 0');
+                    dianthusTesterKeypair = _d.sent();
+                    if (!dianthusTesterKeypair.getAddress().uu.getIsEqual(pollenium_xeranthemum_1.users.dianthusTester)) {
+                        throw new Error('Not dianthusTester');
                     }
-                    return [4 /*yield*/, daishReader_1.daishReader.fetchAllowance({
-                            holder: permitRequest.holder,
-                            spender: pollenium_xanthoceras_1.engine
-                        })];
+                    client = new __1.Client("http://localhost:" + port);
+                    _b = (_a = client).genAndUploadDepositRequest;
+                    _c = {
+                        fromPrivateKey: dianthusTesterKeypair.privateKey,
+                        to: pollenium_xeranthemum_1.users.dianthusTester,
+                        nonce: pollenium_uvaursi_1.Uu.genRandom(32),
+                        token: pollenium_xanthoceras_1.dai
+                    };
+                    return [4 /*yield*/, daishReader_1.daishReader.fetchBalance(pollenium_xeranthemum_1.users.dianthusTester)];
                 case 2:
-                    allowance = _a.sent();
-                    if (allowance.compGt(0)) {
-                        throw new Error('Already permitted');
-                    }
-                    holderHex = permitRequest.holder.uu.toHex();
-                    lastPermittedAt = lastPermittedAtByHolderHex[permitRequest.holder.uu.toHex()];
-                    if (lastPermittedAtByHolderHex[holderHex] !== null) {
-                        ellapsed = new Date().getTime() - lastPermittedAt;
-                        if (ellapsed < cooldown) {
-                            throw new Error("Permitted " + ellapsed + " ago");
-                        }
-                    }
-                    return [4 /*yield*/, daishWriter_1.daishWriter.permit(__assign(__assign({}, permitRequest), { spender: pollenium_xanthoceras_1.engine }))];
-                case 3:
-                    _a.sent();
-                    lastPermittedAtByHolderHex[holderHex] = new Date().getTime();
+                    _c.amount = _d.sent(),
+                        _c.expiration = Math.floor((new Date().getTime()) / 1000) + 30;
+                    return [4 /*yield*/, engineReader_1.engineReader.fetchDepositSalt()];
+                case 3: return [4 /*yield*/, _b.apply(_a, [(_c.actionSalt = _d.sent(),
+                            _c)])];
+                case 4:
+                    _d.sent();
                     return [2 /*return*/];
             }
         });
     });
 }
-exports.handlePermitEncoding = handlePermitEncoding;
+run()["catch"](function (error) {
+    console.log('ERROR', error.message);
+});

@@ -10,6 +10,10 @@ const cooldown = 5 * 60 * 1000
 export async function handlePermitEncoding(encoding) {
   const permitRequest = PermitRequest.fromEncoding(encoding)
 
+  if (!permitRequest.spender.uu.getIsEqual(engine)) {
+    throw new Error('Invalid spender')
+  }
+
   if (!permitRequest.getIsSignatureValid()) {
     throw new Error('Invalid signature')
   }

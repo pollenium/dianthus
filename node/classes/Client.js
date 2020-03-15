@@ -41,8 +41,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 exports.__esModule = true;
 var pollenium_uvaursi_1 = require("pollenium-uvaursi");
 var PermitRequest_1 = require("./PermitRequest");
-var DepositSweepRequest_1 = require("./DepositSweepRequest");
 var RequestType_1 = require("../RequestType");
+var pollenium_alchemilla_1 = require("pollenium-alchemilla");
+var actionViaSignatureStructUtils_1 = require("../utils/actionViaSignatureStructUtils");
 var node_fetch_1 = __importDefault(require("node-fetch"));
 var Client = /** @class */ (function () {
     function Client(serverUrl) {
@@ -80,21 +81,31 @@ var Client = /** @class */ (function () {
             });
         });
     };
-    Client.prototype.genAndUploadPermitRequest = function (struct) {
-        var request = PermitRequest_1.PermitRequest.gen(struct);
-        var requestEncoding = request.getEncoding();
+    Client.prototype.postRequest = function (requestType, requestEncoding) {
         return this.post(pollenium_uvaursi_1.Uu.genConcat([
-            new Uint8Array([RequestType_1.RequestType.PERMIT]),
+            new Uint8Array([requestType]),
             requestEncoding
         ]));
     };
-    Client.prototype.genAndUploadDepositSweepRequest = function (holder) {
-        var request = new DepositSweepRequest_1.DepositSweepRequest(holder);
+    Client.prototype.genAndUploadPermitRequest = function (struct) {
+        var request = PermitRequest_1.PermitRequest.gen(struct);
         var requestEncoding = request.getEncoding();
-        return this.post(pollenium_uvaursi_1.Uu.genConcat([
-            new Uint8Array([RequestType_1.RequestType.DEPOSIT_SWEEP]),
-            requestEncoding
-        ]));
+        return this.postRequest(RequestType_1.RequestType.PERMIT, requestEncoding);
+    };
+    Client.prototype.genAndUploadDepositRequest = function (struct) {
+        var actionViaSignatureStruct = pollenium_alchemilla_1.genActionViaSignatureStruct(struct);
+        var requestEncoding = actionViaSignatureStructUtils_1.actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct);
+        return this.postRequest(RequestType_1.RequestType.DEPOSIT, requestEncoding);
+    };
+    Client.prototype.genAndUploadWithdrawRequest = function (struct) {
+        var actionViaSignatureStruct = pollenium_alchemilla_1.genActionViaSignatureStruct(struct);
+        var requestEncoding = actionViaSignatureStructUtils_1.actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct);
+        return this.postRequest(RequestType_1.RequestType.WITHDRAW, requestEncoding);
+    };
+    Client.prototype.genAndUploadWithdrawAndNotifyRequest = function (struct) {
+        var actionViaSignatureStruct = pollenium_alchemilla_1.genActionViaSignatureStruct(struct);
+        var requestEncoding = actionViaSignatureStructUtils_1.actionViaSignatureStructUtils.toEncoding(actionViaSignatureStruct);
+        return this.postRequest(RequestType_1.RequestType.WITHDRAW_AND_NOTIFY, requestEncoding);
     };
     return Client;
 }());

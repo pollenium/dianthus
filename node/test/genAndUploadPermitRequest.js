@@ -40,6 +40,7 @@ var createServer_1 = require("../utils/createServer");
 var daishReader_1 = require("../utils/daishReader");
 var pollenium_xeranthemum_1 = require("pollenium-xeranthemum");
 var __1 = require("../");
+var pollenium_xanthoceras_1 = require("pollenium-xanthoceras");
 var port = 4920;
 createServer_1.createServer(port);
 function run() {
@@ -59,6 +60,7 @@ function run() {
                     client = new __1.Client("http://localhost:" + port);
                     return [4 /*yield*/, client.genAndUploadPermitRequest({
                             holderPrivateKey: dianthusTesterKeypair.privateKey,
+                            spender: pollenium_xanthoceras_1.engine,
                             nonce: nonce
                         })];
                 case 3:

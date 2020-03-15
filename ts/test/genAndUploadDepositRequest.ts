@@ -3,9 +3,10 @@ import { PermitRequest } from '../classes/PermitRequest'
 import fetch from 'node-fetch'
 import { createServer } from '../utils/createServer'
 import { daishReader } from '../utils/daishReader'
+import { engineReader } from '../utils/engineReader'
 import { users, utils } from 'pollenium-xeranthemum'
+import { dai } from 'pollenium-xanthoceras'
 import { Client } from '../'
-import { engine } from 'pollenium-xanthoceras'
 
 const port = 4920
 
@@ -17,14 +18,17 @@ async function run() {
   if (!dianthusTesterKeypair.getAddress().uu.getIsEqual(users.dianthusTester)) {
     throw new Error('Not dianthusTester')
   }
-  const nonce = await daishReader.fetchNonce(users.dianthusTester)
 
   const client = new Client(`http://localhost:${port}`)
 
-  await client.genAndUploadPermitRequest({
-    holderPrivateKey: dianthusTesterKeypair.privateKey,
-    spender: engine,
-    nonce
+  await client.genAndUploadDepositRequest({
+    fromPrivateKey: dianthusTesterKeypair.privateKey,
+    to: users.dianthusTester,
+    nonce: Uu.genRandom(32),
+    token: dai,
+    amount: await daishReader.fetchBalance(users.dianthusTester),
+    expiration: Math.floor((new Date().getTime()) / 1000) + 30,
+    actionSalt: await engineReader.fetchDepositSalt()
   })
 }
 

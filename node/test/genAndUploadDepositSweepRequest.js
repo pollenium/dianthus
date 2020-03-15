@@ -48,7 +48,7 @@ function run() {
             switch (_a.label) {
                 case 0:
                     client = new __1.Client("http://localhost:" + port);
-                    return [4 /*yield*/, client.genAndUploadDepositSweepRequest(pollenium_xeranthemum_1.users.dianthusTester)];
+                    return [4 /*yield*/, client.genAndUploadDepositRequest(pollenium_xeranthemum_1.users.dianthusTester)];
                 case 1:
                     _a.sent();
                     return [2 /*return*/];

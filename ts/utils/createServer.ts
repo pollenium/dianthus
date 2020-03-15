@@ -1,7 +1,7 @@
 import { createServer as createHttpServer } from 'http'
 import { RequestType } from '../RequestType'
 import { handlePermitEncoding } from './server/handlePermitEncoding'
-import { handleDepositSweepEncoding } from './server/handleDepositSweepEncoding'
+import { handleDepositEncoding, handleWithdrawEncoding, handleWithdrawAndNotifyEncoding } from './server/handleActionEncoding'
 import { Uu } from 'pollenium-uvaursi'
 
 export function createServer(port: number) {
@@ -31,8 +31,14 @@ export function createServer(port: number) {
           case RequestType.PERMIT:
             await handlePermitEncoding(nextEncoding)
             break;
-          case RequestType.DEPOSIT_SWEEP:
-            await handleDepositSweepEncoding(nextEncoding)
+          case RequestType.DEPOSIT:
+            await handleDepositEncoding(nextEncoding)
+            break;
+          case RequestType.WITHDRAW:
+            await handleWithdrawEncoding(nextEncoding)
+            break;
+          case RequestType.WITHDRAW_AND_NOTIFY:
+            await handleWithdrawAndNotifyEncoding(nextEncoding)
             break;
           default:
             throw new Error(`Unknown request type: ${requestType}`)
