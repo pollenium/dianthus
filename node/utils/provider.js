@@ -62,14 +62,13 @@ var FastProvider = /** @class */ (function (_super) {
     }
     FastProvider.prototype.getGasPrice = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var gasPrice, highGasPrice;
+            var gasPrice;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, _super.prototype.getGasPrice.call(this)];
                     case 1:
                         gasPrice = _a.sent();
-                        highGasPrice = gasPrice.mul(1.2);
-                        return [2 /*return*/, highGasPrice.sub(highGasPrice.mod(1))];
+                        return [2 /*return*/, gasPrice.add(gasPrice.div(5))];
                 }
             });
         });

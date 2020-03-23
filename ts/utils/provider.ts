@@ -6,8 +6,7 @@ dotenv.config()
 class FastProvider extends ethers.providers.InfuraProvider {
   async getGasPrice() {
     const gasPrice = await super.getGasPrice()
-    const highGasPrice = gasPrice.mul(1.2)
-    return highGasPrice.sub(highGasPrice.mod(1))
+    return gasPrice.add(gasPrice.div(5))
   }
 }
 
